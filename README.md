@@ -1,2 +1,2 @@
 # jfcoding
-JF coding project for Spring Boot
+JF coding project
