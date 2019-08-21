@@ -27,6 +27,6 @@
         </dependency>
     </dependencies>
     <modules>
-        <module>concurrent</module>
+        <module>java_concurrent</module>
     </modules>
 </project>
