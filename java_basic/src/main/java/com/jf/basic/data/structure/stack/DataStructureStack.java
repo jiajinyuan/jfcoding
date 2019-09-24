@@ -1,4 +1,4 @@
-package com.jf.basic.data.structure;
+package com.jf.basic.data.structure.stack;
 
 import java.util.Stack;
 
