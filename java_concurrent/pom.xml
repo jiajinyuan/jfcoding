@@ -11,5 +11,12 @@
 
     <artifactId>java_concurrent</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.11.6</version>
+        </dependency>
+    </dependencies>
 
 </project>
