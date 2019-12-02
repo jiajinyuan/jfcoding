@@ -7,6 +7,8 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
+import java.util.concurrent.TimeUnit;
+
 import static java.lang.System.out;
 
 /**
@@ -38,13 +40,17 @@ public class Task implements Runnable {
 
         RLock lock = client.getLock("jfLock");
         try {
-            lock.lock();
-            out.println(" --[INFO]--  " + name + " 抢到锁，倒数 5 秒后解锁:");
-            for (int i = 1; i <= 5; i++) {
-                out.print(" " + i);
-                Thread.sleep(1000);
+            boolean b = lock.tryLock(20, 10, TimeUnit.SECONDS);
+            if (b) {
+                out.println(" --[INFO]--  " + name + " 抢到锁，倒数 5 秒后解锁:");
+                for (int i = 1; i <= 5; i++) {
+                    out.print(" " + i);
+                    Thread.sleep(1000);
+                }
+                out.println();
+            } else {
+                out.println(" --[INFO]--  " + name + " 放弃了");
             }
-            out.println();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
