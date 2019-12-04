@@ -1,19 +1,17 @@
 package com.jf.basic.jdk8.stream;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.lang.System.out;
 
 /**
- * Description: JDK 8 Stream api demo
+ * Collect 操作示例
  *
  * @author SF2121
  */
-public class StreamDemo {
+public class StreamCollectDemo {
 
     private static List<Person> persons = Arrays.asList(
             new Person("Max", 18),
@@ -23,10 +21,16 @@ public class StreamDemo {
 
     public static void main(String[] arg) {
         tCollect();
-//        tCoolectGroupBy();
-//        tCoolectAverage();
-//        tCoolectSum();
-//        tCoolectJoining();
+        out.println(" --- * --- * --- * --- * --- * --- * --- ");
+        tCoolectGroupBy();
+        out.println(" --- * --- * --- * --- * --- * --- * --- ");
+        tCoolectAverage();
+        out.println(" --- * --- * --- * --- * --- * --- * --- ");
+        tCoolectSum();
+        out.println(" --- * --- * --- * --- * --- * --- * --- ");
+        tCoolectJoining();
+        out.println(" --- * --- * --- * --- * --- * --- * --- ");
+        tCoolectMyself();
     }
 
     /**
@@ -48,11 +52,13 @@ public class StreamDemo {
             out.println(" -[DEBUG]-   k2=" + entry.getKey() + "; v2=" + entry.getValue());
         }
 
-        // 会出异常，因为有两个年龄18， 导致key重复了，
+        // 会出异常，因为有两个年龄23， 导致key重复了，
+        /*
         Map<Integer, String> map = persons.stream().collect(Collectors.toMap(Person::getAge, Person::getName));
         for (Map.Entry<Integer, String> entry : map.entrySet()) {
             out.println(" -[DEBUG]-   k=" + entry.getKey() + "; v=" + entry.getValue());
         }
+         */
     }
 
     /**
@@ -91,6 +97,31 @@ public class StreamDemo {
     private static void tCoolectJoining() {
         String s = persons.stream().map(Person::getName).collect(Collectors.joining(", ", "前缀 ", " 后缀"));
         out.println(" -[DEBUG]-   " + s);
+    }
+
+    /**
+     * 自定义 Collector
+     * <p>
+     * suppiler 实例化一个带 | 分隔符的 StringJoiner 对象。
+     * accumulator 把字符串转成大写并且放进 StringJoiner 对象，
+     * combiner 将两个 StringJoiner 对象合成一个，
+     * 最后 finisher 把 StringJoiner 对象输出为 String 对象
+     */
+    private static void tCoolectMyself() {
+        Collector<Person, StringJoiner, String> personNameCollector = Collector.of(
+                // supplier
+                () -> new StringJoiner(" | "),
+                // accumulator
+                (j, p) -> j.add(p.getName().toUpperCase()),
+                // combiner
+                StringJoiner::merge,
+                // finisher
+                StringJoiner::toString);
+
+        String names = persons.stream().collect(personNameCollector);
+        // MAX | PETER | PAMELA | DAVID
+        out.println(names);
+
     }
 
 
