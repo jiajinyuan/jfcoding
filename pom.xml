@@ -23,7 +23,6 @@
         <module>java_concurrent</module>
         <module>java_orther</module>
         <module>java_basic</module>
-        <module>bigdata_hdfs</module>
     </modules>
 
     <dependencyManagement>
